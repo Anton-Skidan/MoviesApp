@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/features/movies_list_screen/provider/movies_provider.dart';
 import 'package:provider/provider.dart';
-
-import 'views/movie_item.dart';
+import 'views/movie_list_item.dart';
 
 class MoviesListScreen extends StatefulWidget {
   const MoviesListScreen({super.key});
@@ -40,16 +39,9 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
                   );
                   FocusScope.of(context).unfocus();
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Search movies',
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () {
-                      context.read<MoviesProvider>().fetchMoviesByQuery(
-                        _searchController.text,
-                      );
-                    },
-                  ),
+                  suffixIcon: Icon(Icons.search),
                 ),
               ),
             ),
@@ -68,10 +60,20 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
 
             Expanded(
               child: ListView.separated(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
                 itemCount: provider.movies.length,
                 separatorBuilder: (_, __) => const Divider(height: 1),
                 itemBuilder: (_, int index) {
-                  return MovieListItem(movie: provider.movies[index]);
+                  final movie = provider.movies[index];
+
+                  return MovieListItem(
+                    movie: movie,
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                      debugPrint('Tapped movie: ${movie.title}');
+                    },
+                  );
                 },
               ),
             ),
