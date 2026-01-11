@@ -19,7 +19,7 @@ class MoviesProvider extends ChangeNotifier {
     final normalizedQuery = searchQuery.trim();
     if (normalizedQuery.isEmpty) return;
 
-    _setLoadingState();
+    _clearStateForNewSearch();
 
     try {
       final List<Movie> fetchedMovies =
@@ -30,18 +30,15 @@ class MoviesProvider extends ChangeNotifier {
       _errorMessage = 'Failed to load movies';
       debugPrintStack(label: exception.toString(), stackTrace: stackTrace);
     } finally {
-      _resetLoadingState();
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
-  void _setLoadingState() {
-    _isLoading = true;
+  void _clearStateForNewSearch() {
+    _movies = <Movie>[];
     _errorMessage = null;
-    notifyListeners();
-  }
-
-  void _resetLoadingState() {
-    _isLoading = false;
+    _isLoading = true;
     notifyListeners();
   }
 }

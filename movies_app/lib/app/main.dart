@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/features/movies_list_screen/provider/movies_provider.dart';
-import 'package:movies_app/features/movies_list_screen/network/network.dart';
-import 'package:movies_app/features/movies_list_screen/repository/movies_repository.dart';
-import 'package:movies_app/features/movies_list_screen/view/view.dart';
+import 'package:movies_app/features/movies_list_screen/feature.dart';
 import 'package:provider/provider.dart';
 
 void main() {
