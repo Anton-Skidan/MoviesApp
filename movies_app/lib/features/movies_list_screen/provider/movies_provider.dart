@@ -22,8 +22,9 @@ class MoviesProvider extends ChangeNotifier {
     _clearStateForNewSearch();
 
     try {
-      final List<Movie> fetchedMovies =
-          await _repository.searchMovies(normalizedQuery);
+      final List<Movie> fetchedMovies = await _repository.searchMovies(
+        normalizedQuery,
+      );
 
       _movies = fetchedMovies;
     } catch (exception, stackTrace) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/app/appRoutes.dart';
 import 'package:movies_app/features/movies_list_screen/provider/movies_provider.dart';
 import 'package:provider/provider.dart';
 import 'views/movie_list_item.dart';
@@ -70,8 +71,17 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
                   return MovieListItem(
                     movie: movie,
                     onTap: () {
-                      FocusScope.of(context).unfocus();
-                      debugPrint('Tapped movie: ${movie.title}');
+                      final currentFocus = FocusManager.instance.primaryFocus;
+
+                      if (currentFocus != null) {
+                        currentFocus.unfocus();
+                      }
+
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.movieDetails,
+                        arguments: movie,
+                      );
                     },
                   );
                 },

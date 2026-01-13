@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/app/app.dart';
 import 'package:movies_app/features/movies_list_screen/feature.dart';
 import 'package:provider/provider.dart';
 
@@ -9,18 +10,7 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (_) => MoviesProvider(repo),
-      child: const MyApp(),
+      child: const MoviesApp(),
     ),
   );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: MoviesListScreen(),
-    );
-  }
 }

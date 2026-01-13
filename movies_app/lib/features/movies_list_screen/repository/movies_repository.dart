@@ -19,8 +19,7 @@ class MoviesRepository {
 
     return items
         .map<Movie>(
-          (dynamic item) =>
-              Movie.fromJson(item as Map<String, dynamic>),
+          (dynamic item) => Movie.fromJson(item as Map<String, dynamic>),
         )
         .toList();
   }
