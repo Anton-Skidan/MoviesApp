@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movies_app/common_models/common_models.dart';
 
@@ -13,10 +14,17 @@ class MovieListItem extends StatelessWidget {
       onTap: onTap,
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(32),
-        child: SizedBox(
-          width: 64,
-          height: 64,
-          child: Image.network(movie.poster, fit: BoxFit.cover),
+        child: CachedNetworkImage(
+          imageUrl: movie.poster,
+          fit: BoxFit.cover,
+          placeholder: (_, __) => const Center(
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          ),
+          errorWidget: (_, __, ___) => const Icon(Icons.broken_image, size: 32),
         ),
       ),
       title: Text(movie.title),

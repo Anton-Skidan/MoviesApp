@@ -27,7 +27,6 @@ final class _$MoviesService extends MoviesService {
       client.baseUrl,
       parameters: $params,
     );
-
     return client.send<Map<String, dynamic>, Map<String, dynamic>>($request);
   }
 }

@@ -13,10 +13,12 @@ class MoviesListScreen extends StatefulWidget {
 
 class _MoviesListScreenState extends State<MoviesListScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
 
   @override
   void dispose() {
     _searchController.dispose();
+    _searchFocusNode.dispose();
     super.dispose();
   }
 
@@ -33,12 +35,13 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
               padding: const EdgeInsets.all(8),
               child: TextField(
                 controller: _searchController,
+                focusNode: _searchFocusNode,
                 textInputAction: TextInputAction.search,
                 onEditingComplete: () {
                   context.read<MoviesProvider>().fetchMoviesByQuery(
                     _searchController.text,
                   );
-                  FocusScope.of(context).unfocus();
+                  _searchFocusNode.unfocus();
                 },
                 decoration: const InputDecoration(
                   hintText: 'Search movies',
@@ -71,11 +74,7 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
                   return MovieListItem(
                     movie: movie,
                     onTap: () {
-                      final currentFocus = FocusManager.instance.primaryFocus;
-
-                      if (currentFocus != null) {
-                        currentFocus.unfocus();
-                      }
+                      _searchFocusNode.unfocus();
 
                       Navigator.pushNamed(
                         context,

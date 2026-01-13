@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movies_app/common_models/common_models.dart';
 
@@ -15,7 +16,7 @@ class MovieDetailsScreen extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(movie.poster),
+                image: CachedNetworkImageProvider(movie.poster),
                 fit: BoxFit.cover,
               ),
             ),
