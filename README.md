@@ -46,6 +46,6 @@ Android / iOS эмулятор или устройство
 
 | Превью поиска | Превью детальной страницы |
 | --- | --- |
-| https://github.com/user-attachments/assets/0d4a7b71-7ba4-498d-a523-c0ccf82f6fae | https://github.com/user-attachments/assets/badfcbd7-96d0-4e44-9189-a4b746cd41aa |
+| ![](https://github.com/user-attachments/assets/0d4a7b71-7ba4-498d-a523-c0ccf82f6fae) | ![](https://github.com/user-attachments/assets/badfcbd7-96d0-4e44-9189-a4b746cd41aa) |
 
 
