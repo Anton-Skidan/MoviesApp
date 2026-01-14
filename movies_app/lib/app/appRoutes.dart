@@ -11,15 +11,31 @@ class AppRoutes {
     movies: (_) => const MoviesListScreen(),
   };
 
-  static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
-    if (settings.name == movieDetails) {
-      final Movie movie = settings.arguments as Movie;
+  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case movieDetails:
+        final Object? args = settings.arguments;
 
-      return MaterialPageRoute(
-        builder: (_) => MovieDetailsScreen(movie: movie),
-      );
+        if (args is Movie) {
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (_) => MovieDetailsScreen(movie: args),
+          );
+        }
+
+        return _errorRoute('Invalid arguments for $movieDetails');
+
+      default:
+        return _errorRoute('Route not found: ${settings.name}');
     }
+  }
 
-    return null;
+  static Route<dynamic> _errorRoute(String message) {
+    return MaterialPageRoute(
+      builder: (_) => Scaffold(
+        appBar: AppBar(title: const Text('Navigation error')),
+        body: Center(child: Text(message)),
+      ),
+    );
   }
 }

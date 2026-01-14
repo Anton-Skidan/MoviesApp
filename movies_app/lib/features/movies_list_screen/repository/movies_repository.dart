@@ -1,26 +1,45 @@
+import 'package:chopper/chopper.dart';
 import 'package:movies_app/common_models/common_models.dart';
 import 'package:movies_app/features/movies_list_screen/network/movies_service.dart';
+import 'package:movies_app/features/movies_list_screen/repository/movies_repository_result.dart';
 
 class MoviesRepository {
   final MoviesService _moviesService;
 
   MoviesRepository(this._moviesService);
 
-  Future<List<Movie>> searchMovies(String searchQuery) async {
-    final response = await _moviesService.searchMovies(searchQuery);
+  Future<MoviesRepositoryResult<List<Movie>>> searchMovies(String searchQuery) async {
+    try {
+      final Response<Map<String, dynamic>> response =
+          await _moviesService.searchMovies(searchQuery);
 
-    final Map<String, dynamic>? responseBody = response.body;
+      if (!response.isSuccessful) {
+        return MoviesRepositoryResult.failure(
+          'Network error: ${response.statusCode}',
+        );
+      }
 
-    if (responseBody == null || responseBody['description'] is! List) {
-      throw Exception('Invalid API response format');
+      final Map<String, dynamic>? responseBody = response.body;
+      if (responseBody == null) {
+        return const MoviesRepositoryResult.failure('Empty server response');
+      }
+
+      final Object? descriptionField = responseBody['description'];
+      if (descriptionField is! List<dynamic>) {
+        return const MoviesRepositoryResult.failure('Invalid response format');
+      }
+
+      final List<Movie> movies = <Movie>[];
+
+      for (final dynamic item in descriptionField) {
+        if (item is Map<String, dynamic>) {
+          movies.add(Movie.fromJson(item));
+        }
+      }
+
+      return MoviesRepositoryResult.success(movies);
+    } catch (exception) {
+      return const MoviesRepositoryResult.failure('Connection error');
     }
-
-    final List<dynamic> items = responseBody['description'] as List<dynamic>;
-
-    return items
-        .map<Movie>(
-          (dynamic item) => Movie.fromJson(item as Map<String, dynamic>),
-        )
-        .toList();
   }
 }

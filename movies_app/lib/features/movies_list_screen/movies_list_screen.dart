@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:movies_app/app/appRoutes.dart';
 import 'package:movies_app/features/movies_list_screen/provider/movies_provider.dart';
@@ -15,11 +16,22 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
 
+  Timer? _debounceTimer;
+
   @override
   void dispose() {
+    _debounceTimer?.cancel();
     _searchController.dispose();
     _searchFocusNode.dispose();
     super.dispose();
+  }
+
+  void _onSearchSubmitted(String query) {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 400), () {
+      context.read<MoviesProvider>().fetchMoviesByQuery(query);
+    });
+    _searchFocusNode.unfocus();
   }
 
   @override
@@ -30,19 +42,14 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
       appBar: AppBar(title: const Text('Movies')),
       body: SafeArea(
         child: Column(
-          children: <Widget>[
+          children: [
             Padding(
               padding: const EdgeInsets.all(8),
               child: TextField(
                 controller: _searchController,
                 focusNode: _searchFocusNode,
                 textInputAction: TextInputAction.search,
-                onEditingComplete: () {
-                  context.read<MoviesProvider>().fetchMoviesByQuery(
-                    _searchController.text,
-                  );
-                  _searchFocusNode.unfocus();
-                },
+                onSubmitted: _onSearchSubmitted,
                 decoration: const InputDecoration(
                   hintText: 'Search movies',
                   suffixIcon: Icon(Icons.search),
@@ -62,6 +69,12 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
                 child: Text(provider.errorMessage!),
               ),
 
+            if (!provider.isLoading && provider.movies.isEmpty)
+              const Padding(
+                padding: EdgeInsets.all(24),
+                child: Text('No movies found'),
+              ),
+
             Expanded(
               child: ListView.separated(
                 keyboardDismissBehavior:
@@ -75,7 +88,6 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
                     movie: movie,
                     onTap: () {
                       _searchFocusNode.unfocus();
-
                       Navigator.pushNamed(
                         context,
                         AppRoutes.movieDetails,

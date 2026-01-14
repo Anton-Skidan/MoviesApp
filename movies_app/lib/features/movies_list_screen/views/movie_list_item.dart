@@ -12,19 +12,24 @@ class MovieListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: onTap,
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(32),
-        child: CachedNetworkImage(
-          imageUrl: movie.poster,
-          fit: BoxFit.cover,
-          placeholder: (_, __) => const Center(
-            child: SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
+      leading: SizedBox(
+        width: 64,
+        height: 64,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(32),
+          child: CachedNetworkImage(
+            imageUrl: movie.poster,
+            fit: BoxFit.cover,
+            placeholder: (_, __) => const Center(
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
             ),
+            errorWidget: (_, __, ___) =>
+                const Icon(Icons.broken_image, size: 32),
           ),
-          errorWidget: (_, __, ___) => const Icon(Icons.broken_image, size: 32),
         ),
       ),
       title: Text(movie.title),
